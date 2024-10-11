@@ -70,17 +70,16 @@ async function docxToPdf(inputDocxPath, outputPdfPath) {
 }
 
 // 1. 读取模板并生成新的 docx 文档
-app.get('/generate/docx', async (req, res) => {
-    const varData = req.query
+app.post('/generate/docx', async (req, res) => {
+    const varData = req.body
     if (!fs.existsSync('data/cache')) {
       fs.mkdirSync('data/cache')
     }
 
     const outputPath = `data/cache/${varData.template}_${Date.now()}.docx`
-    const templatePath = `data/templates/${varData.template}.docx`
+    const templatePath = `data/templates/${varData.template}`
     try {
-
-      await generateDocxFile(templatePath, varData, outputPath)
+      await generateDocxFile(templatePath, varData.body, outputPath)
 
         // 下载文件
         res.download(outputPath, (err) => {
